@@ -30,7 +30,34 @@ and available from the command line:
 # compiler jar
 ./gradlew jar
 
-# should use absolute path
-java -jar build/libs/android-aab-tools-1.0-SNAPSHOT.jar -i=./app-release.apk -o=./app-release.aab
+# command usage
+java -jar android-aab-tools-1.0.jar
+```
+```
+Usage: aabtools [-hV] [COMMAND]
+A APK/AAB File Converter.
+  -h, --help      Show this help message and exit.
+  -V, --version   Print version information and exit.
+Commands:
+  help     Display help information about the specified command.
+  convert  A APK/AAB File Converter.
+  sign     A APK/AAB File Signer.
+
+Usage: aabtools convert [-i=<input>] [-o=<output>]
+A APK/AAB File Converter.
+  -i, --in=<input>     Input file
+  -o, --out=<output>   Output file
+
+Usage: aabtools sign -i=<input> -k=<keyStorePath> -kp=<keyPass>
+                     -ksa=<keyStoreAlias> -ksp=<keyStorePass>
+A APK/AAB File Signer.
+  -i, --in=<input>          Input file
+  -k, --ks=<keyStorePath>   KeyStore file
+      -kp, --key-pass=<keyPass>
+                            Key password
+      -ksa, --ks-key-alias=<keyStoreAlias>
+                            KeyStore alias name
+      -ksp, --ks-pass=<keyStorePass>
+                            KeyStore password
 
 ```

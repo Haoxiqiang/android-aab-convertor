@@ -1,57 +1,26 @@
 package com.androidx.aab
 
-import java.io.File
-import kotlin.system.exitProcess
+import com.androidx.aab.command.FileConverter
+import com.androidx.aab.command.FileSigner
+import picocli.CommandLine
 
 
+@CommandLine.Command(
+    name = "aabtools",
+    mixinStandardHelpOptions = true,
+    subcommands = [CommandLine.HelpCommand::class],
+    version = ["aabtools 1.0.0"],
+    description = ["A APK/AAB File Converter."]
+)
 class AABTool {
-
-    @Throws(Exception::class)
-    fun call(inputs: Map<String, String>): Int {
-
-        //val jarLocation: String = AABTool::class.java
-        //    .protectionDomain.codeSource.location.path
-        //println(jarLocation)
-
-        val input: File? = inputs["-i"]?.let { File(it) }
-        val output: File? = inputs["-o"]?.let { File(it) }
-
-        if (input == null) {
-            println("Input file not found. use -i file's path")
-            return -1
-        }
-
-        if (output == null) {
-            println("Output file not found. use -i file's path")
-            return -1
-        }
-
-        if (input.extension == output.extension) {
-            input.copyTo(output)
-            return 0
-        }
-
-        if (input.extension == "apk" && output.extension == "aab") {
-            APK2AAB.convert(input, output)
-        } else if (input.extension == "aab" && output.extension == "apk") {
-            AAB2APK.convert(input, output)
-        } else {
-            println("input:$input output:$output not support.")
-        }
-        return 0
-    }
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            println(args.joinToString())
-            val inputs = args.associate { arg ->
-                val pair = arg.split("=")
-                Pair(pair[0], pair[1])
-            }
-            val aabTool = AABTool()
-            val exitCode = aabTool.call(inputs)
-            exitProcess(exitCode)
+            CommandLine(AABTool())
+                .addSubcommand("convert", FileConverter())
+                .addSubcommand("sign", FileSigner())
+                .execute(*args)
         }
     }
 }

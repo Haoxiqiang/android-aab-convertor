@@ -13,6 +13,7 @@ buildscript {
 
 plugins {
     kotlin("jvm") version "1.8.10"
+    kotlin("kapt") version "1.8.10"
     `java-library`
 }
 
@@ -35,9 +36,17 @@ dependencies {
     api("com.google.guava:guava:31.1-jre")
     api("org.bouncycastle:bcprov-jdk15on:1.70")
     api("org.bouncycastle:bcpkix-jdk15on:1.70")
+    api("info.picocli:picocli:4.7.3")
+    kapt("info.picocli:picocli-codegen:4.7.3")
     // just resolve deps.
     api("javax.inject:javax.inject:1")
     api("com.google.dagger:dagger:2.45")
+}
+
+kapt {
+    arguments {
+        arg("project", "${project.group}/${project.name}")
+    }
 }
 
 tasks.test {
