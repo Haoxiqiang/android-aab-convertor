@@ -33,7 +33,7 @@ class AABTool {
 
         if (input.extension == "apk" && output.extension == "aab") {
             APK2AAB.convert(input, output)
-        } else if (input.extension == "aab" && output.extension == "apks") {
+        } else if (input.extension == "aab" && output.extension == "apk") {
             AAB2APK.convert(input, output)
         } else {
             println("input:$input output:$output not support.")
