@@ -42,3 +42,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 /proguard/
+bundletool-all-1.15.6.jar

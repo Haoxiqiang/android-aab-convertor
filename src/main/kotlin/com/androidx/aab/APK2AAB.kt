@@ -76,9 +76,7 @@ object APK2AAB {
         val baseZip = createBaseZip(tempDir, protoZip)
         val noSignAABFile = buildAABFile(tempDir, baseZip)
         val signedAABFile = signAABFile(tempDir, noSignAABFile)
-        val alignedAABFile = zipAlign(tempDir, signedAABFile)
-
-        alignedAABFile.copyTo(output)
+        signedAABFile.copyTo(output)
 
         tempDir.deleteRecursively()
     }
@@ -96,14 +94,17 @@ object APK2AAB {
 
         val processBuilder = ProcessBuilder()
         val stringWriter = StringWriter()
+
         val args: MutableList<String> = ArrayList()
         args.add(AndroidTools.getAAPT2())
         args.add("convert")
-        args.add(input.absolutePath)
         args.add("-o")
         args.add(outFile.absolutePath)
         args.add("--output-format")
         args.add("proto")
+        args.add("--keep-raw-values")
+        args.add(input.absolutePath)
+
         processBuilder.command(args)
         val process = processBuilder.start()
         val scanner = Scanner(process.errorStream)
@@ -201,23 +202,23 @@ object APK2AAB {
         println(baseZip.absolutePath)
         println(outFile.absolutePath)
 
-        val builder = BuildBundleCommand.builder()
+        val compression = Config.Compression.newBuilder()
+            .addAllUncompressedGlob(mFilesNotToCompress)
+            .build()
+
+        val bundleConfig = Config.BundleConfig
+            .newBuilder()
+            .mergeCompression(compression)
+            .build()
+
+        val command = BuildBundleCommand.builder()
             .setModulesPaths(ImmutableList.of(baseZip.toPath()))
             .setOutputPath(outFile.toPath())
+            .setBundleConfig(bundleConfig)
             .setOverwriteOutput(true)
+            .build()
 
-        val bundleConfigBuilder = Config.BundleConfig.newBuilder()
-
-        val compressionBuilder = Config.Compression.newBuilder()
-        val compression = compressionBuilder.addAllUncompressedGlob(mFilesNotToCompress).build()
-        val bundleConfig = bundleConfigBuilder.mergeCompression(compression).build()
-        builder.setBundleConfig(bundleConfig)
-
-        //for (metaData in mMetaData) {
-        //    builder.addMetadataFile(metaData.getDirectory(), metaData.getFileName(), metaData.getPath())
-        //}
-
-        builder.build().execute()
+        command.execute()
         println("Successfully converted Apk to AAB")
 
         return outFile
@@ -258,41 +259,6 @@ object APK2AAB {
             .setOutputApk(outFile)
             .build()
             .sign()
-
-        return outFile
-    }
-
-    private fun zipAlign(dir: File, aab: File): File {
-        println("Aligning aab")
-
-        val outFile = File(dir, "signed-aligned.aab")
-        if (outFile.exists()) {
-            outFile.delete()
-        }
-        outFile.createNewFile()
-
-        val processBuilder = ProcessBuilder()
-        val args = listOf(
-            AndroidTools.getZipAlign(),
-            "-vf",
-            "4",
-            aab.absolutePath,
-            outFile.absolutePath
-        )
-        processBuilder.command(args)
-        val process: Process = processBuilder.start()
-        val scanner = Scanner(process.errorStream)
-        val errorList = mutableListOf<String>()
-        while (scanner.hasNextLine()) {
-            errorList.add(scanner.nextLine())
-        }
-        process.waitFor()
-
-        println(errorList.joinToString("\n"))
-
-        if (errorList.stream().anyMatch { it.startsWith("ERROR:") }) {
-            throw Exception(errorList.stream().collect(Collectors.joining("\n")))
-        }
 
         return outFile
     }

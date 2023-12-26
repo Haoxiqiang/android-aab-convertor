@@ -4,4 +4,4 @@
 command=$1
 input=$2
 output=$3
-java -jar build/libs/android-aab-tools-1.0.jar $command -i $input -o $output
+java -jar build/libs/android-aab-tools-1.0.jar "$command" -i "$input" -o "$output"
