@@ -15,6 +15,11 @@ import picocli.CommandLine
 class AABTool {
 
     companion object {
+
+         const val KEYSTORE_PASSWORD = "KP20230417"
+         const val KEY_ALIAS = "google"
+         const val KEY_PASSWORD = "KP20230417"
+
         @JvmStatic
         fun main(args: Array<String>) {
             CommandLine(AABTool())

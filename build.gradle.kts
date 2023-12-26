@@ -28,19 +28,20 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
 
-    api("com.android.tools.build:bundletool:1.14.0")
-    api("com.android.tools.build:aapt2:7.4.2-8841542")
-    api("com.android.tools.build:aapt2-proto:7.4.2-8841542")
-    api("com.android.tools.build:apksig:7.4.2")
-    api("com.google.protobuf:protobuf-java:3.22.3")
-    api("com.google.guava:guava:31.1-jre")
+    api("com.android.tools.build:bundletool:1.15.6")
+    val aaptVersion = "8.0.2-9289358"
+    api("com.android.tools.build:aapt2:$aaptVersion")
+    api("com.android.tools.build:aapt2-proto:$aaptVersion")
+    api("com.android.tools.build:apksig:8.2.0")
+    api("com.google.protobuf:protobuf-java:3.25.1")
+    api("com.google.guava:guava:33.0.0-jre")
     api("org.bouncycastle:bcprov-jdk15on:1.70")
     api("org.bouncycastle:bcpkix-jdk15on:1.70")
-    api("info.picocli:picocli:4.7.3")
-    kapt("info.picocli:picocli-codegen:4.7.3")
+    api("info.picocli:picocli:4.7.5")
+    kapt("info.picocli:picocli-codegen:4.7.5")
     // just resolve deps.
     api("javax.inject:javax.inject:1")
-    api("com.google.dagger:dagger:2.45")
+    api("com.google.dagger:dagger:2.50")
 }
 
 kapt {

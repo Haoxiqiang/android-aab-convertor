@@ -2,6 +2,7 @@ package com.androidx.aab.tools
 
 import com.android.tools.build.bundletool.model.Password
 import com.android.tools.build.bundletool.model.SigningConfiguration
+import com.androidx.aab.AABTool
 import org.bouncycastle.asn1.ASN1Boolean
 import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.asn1.DERSequence
@@ -30,11 +31,6 @@ object SigningTools {
 
     private const val BASIC_CONSTRAINTS_EXTENSION = "2.5.29.19"
 
-    private const val KEYSTORE_PASSWORD = "KP20230417"
-    private const val KEY_ALIAS = "google"
-    private const val KEY_PASSWORD = "KP20230417"
-
-
     private val keyPair by lazy {
         KeyPairGenerator.getInstance("RSA").genKeyPair()
     }
@@ -55,9 +51,9 @@ object SigningTools {
         val keystorePath: Path = createKeystoreOfType("JKS", file)
         return extractFromKeystore(
             keystorePath,
-            KEY_ALIAS,
-            KEYSTORE_PASSWORD,
-            KEY_PASSWORD
+            AABTool.KEY_ALIAS,
+            AABTool.KEYSTORE_PASSWORD,
+            AABTool.KEY_PASSWORD
         )
     }
 
@@ -77,7 +73,7 @@ object SigningTools {
 
     @Throws(java.lang.Exception::class)
     private fun createKeystoreOfType(keystoreType: String, file: File): Path {
-        return createKeystoreWithPasswords(file, keystoreType, KEYSTORE_PASSWORD, KEY_PASSWORD)
+        return createKeystoreWithPasswords(file, keystoreType, AABTool.KEYSTORE_PASSWORD, AABTool.KEY_PASSWORD)
     }
 
     @Throws(java.lang.Exception::class)
@@ -87,7 +83,7 @@ object SigningTools {
         val keystore: KeyStore = KeyStore.getInstance(keystoreType)
         keystore.load(null, keystorePassword.toCharArray())
         keystore.setKeyEntry(
-            KEY_ALIAS, privateKey, keyPassword.toCharArray(), arrayOf<Certificate>(certificate)
+            AABTool.KEY_ALIAS, privateKey, keyPassword.toCharArray(), arrayOf<Certificate>(certificate)
         )
         val keystorePath: Path = file.toPath()
         keystore.store(FileOutputStream(keystorePath.toFile()), keystorePassword.toCharArray())

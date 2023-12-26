@@ -24,15 +24,21 @@ sdk:
 and [`zipalign`](https://developer.android.com/studio/command-line/zipalign) installed
 and available from the command line:
 
+### Notice
+
+It's a bundle-tools wrapper for sometimes used for convert aab <-> apk.
+You should upgrade dependencies before build. AGP or AAPT2 may be upgrade the file name or types.
+
 ### Usage
 
 ```Shell
-# compiler jar
+# compiler jar to build/libs/android-aab-tools-1.0.jar
 ./gradlew jar
 
 # command usage
 java -jar android-aab-tools-1.0.jar
 ```
+
 ```
 Usage: aabtools [-hV] [COMMAND]
 A APK/AAB File Converter.

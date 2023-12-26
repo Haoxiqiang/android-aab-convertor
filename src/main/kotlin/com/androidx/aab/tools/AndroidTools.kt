@@ -30,6 +30,7 @@ object AndroidTools {
         V3300("33.0.0"),
         V3301("33.0.1"),
         V3302("33.0.2"),
+        V3400("34.0.0"),
     }
 
     private fun queryVersions(): String {
