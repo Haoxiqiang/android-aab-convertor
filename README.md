@@ -4,10 +4,6 @@ A tool for android aab file decompiler/compiler.
 
 #### Prerequisites
 
-Make sure to have a recent version of
-[`apktool`](https://ibotpeaches.github.io/Apktool/), Now you should use 2.7.0 or more latest
-version.
-
 Tools will use some android build-tool's utils, you should configuration your env file.
 
 ```bash
@@ -37,6 +33,10 @@ You should upgrade dependencies before build. AGP or AAPT2 may be upgrade the fi
 
 # command usage
 java -jar android-aab-tools-1.0.jar
+
+# install or test, get bundletool.jar from https://github.com/google/bundletool/releases
+java -jar bundletool.jar build-apks --bundle=app-release.aab --output=app-release.apks
+java -jar bundletool.jar install-apks --apks=app-release.apks
 ```
 
 ```
