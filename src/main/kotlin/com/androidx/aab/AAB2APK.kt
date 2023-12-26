@@ -17,7 +17,7 @@ object AAB2APK {
 
     fun convert(input: File, output: File) {
 
-        println("Starting apk to AAB")
+        println("Starting aab to apk")
 
         val tempDir = File(input.parent, "${input.nameWithoutExtension}-out")
         if (!tempDir.isDirectory) {

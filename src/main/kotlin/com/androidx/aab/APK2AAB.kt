@@ -64,6 +64,8 @@ object APK2AAB {
 
     fun convert(input: File, output: File) {
 
+        println("Starting apk to aab")
+
         val tempDir = File(input.parent, "${input.nameWithoutExtension}-out")
         if (!tempDir.isDirectory) {
             tempDir.deleteRecursively()
@@ -141,7 +143,12 @@ object APK2AAB {
         val fds = listOf(protoInputStream, baseOutputStream, zipInputStream, zipInputStream, zipFile)
         do {
             val entry: ZipEntry = zipInputStream.nextEntry ?: break
-            val zipEntry = if (
+            val zipEntry = if (entry.name.startsWith("assets")) {
+                // the META-INF folder may contain non-signature-related resources
+                // as well, so we check if the entry doesn't point to a signature
+                // file before adding it
+                ZipEntry(entry.name)
+            } else if (
                 entry.name.endsWith(".dex") ||
                 entry.name.startsWith("classes")
             ) {
@@ -154,11 +161,6 @@ object APK2AAB {
             ) {
                 ZipEntry(entry.name)
             } else if (entry.name == "resources.pb") {
-                ZipEntry(entry.name)
-            } else if (entry.name.startsWith("assets")) {
-                // the META-INF folder may contain non-signature-related resources
-                // as well, so we check if the entry doesn't point to a signature
-                // file before adding it
                 ZipEntry(entry.name)
             } else {
                 ZipEntry("root" + File.separator + entry.name)
@@ -260,7 +262,7 @@ object APK2AAB {
         return outFile
     }
 
-    fun zipAlign(dir: File, aab: File): File {
+    private fun zipAlign(dir: File, aab: File): File {
         println("Aligning aab")
 
         val outFile = File(dir, "signed-aligned.aab")
